@@ -1,0 +1,11 @@
+[Unit]
+Description=Module 7 sensor monitor
+After=network.target
+[Service]
+User=REPLACE_WITH_YOUR_LINUX_USERNAME
+WorkingDirectory=/opt/module7
+ExecStart=/opt/module7/.venv/bin/python /opt/module7/app.py --runtime /opt/module7/runtime
+Restart=always
+RestartSec=2
+[Install]
+WantedBy=multi-user.target

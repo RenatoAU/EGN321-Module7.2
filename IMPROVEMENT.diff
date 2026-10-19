@@ -1,0 +1,74 @@
+--- baseline/app.py
++++ updated/app.py
+@@ -28,6 +28,7 @@
+         self.log = setup(self.folder)
+         self.started = time.time()
+         self.last_health = None
++        self.last_input_alert = None
+         with open(ROOT/'data/module6_sample_sensor_history.csv', newline='') as f:
+             self.rows = list(csv.DictReader(f))
+         with history.connect(self.path) as db:
+@@ -71,15 +72,31 @@
+                            (utc(),row['timestamp'],raw,value,status,'SYNTHETIC_TEST' if self.demo else 'MODULE6_ACCELERATED_REPLAY'))
+                 db.execute('UPDATE monitor_state SET cursor=?,alert=?,high_count=? WHERE id=1', (state['cursor']+1,alert,count))
+                 db.commit()
+-                event(self.log, 'READING_PROCESSED', status=status, source_timestamp=row['timestamp'], value=value)
++                event(self.log, 'READING_PROCESSED', component='Replay', sample_number=state['cursor']+1, reading_id=state['cursor']+1, database_path=str(self.path), status=status, source_timestamp=row['timestamp'], value=value)
+                 if alert != state['alert']:
+                     event(self.log, 'ALERT_ACTIVATED' if alert == 'ALERT' else 'ALERT_CLEARED', value=value)
+-        health = self.snapshot()['health']
++        snapshot = self.snapshot()
++        health = snapshot['health']
++        reason = ('NO_DELIVERY' if snapshot['data_status']=='STALE' else
++                  'NO_VALID_INPUT' if snapshot['valid_age_seconds'] > 3*self.interval else
++                  'INVALID_READING' if snapshot['data_status'] not in ('ACCEPTED','WAITING') else
++                  'TEMPERATURE_ALERT' if snapshot['alert']=='ALERT' else 'FRESH_VALID_INPUT')
++        fields = dict(component='Health', previous_health=self.last_health, health=health,
++                      reason=reason, age_seconds=snapshot['age_seconds'],
++                      valid_age_seconds=snapshot['valid_age_seconds'],
++                      stale_after_seconds=3*self.interval, failed_after_seconds=10*self.interval,
++                      latest_reading_id=snapshot['latest']['id'] if snapshot['latest'] else None,
++                      database_path=str(self.path))
+         if health != self.last_health:
+-            event(self.log, 'HEALTH_CHANGED', health=health)
++            event(self.log, 'HEALTH_CHANGED', level='ERROR' if health=='FAILED' else
++                  'WARNING' if health=='DEGRADED' else 'INFO', **fields)
+             if health in ('DEGRADED','FAILED'):
+-                event(self.log, 'MISSING_OR_STALE_DATA', health=health)
++                event(self.log, 'MISSING_OR_STALE_DATA', level='WARNING', **fields)
+             self.last_health = health
++        if snapshot['input_alert'] != self.last_input_alert:
++            event(self.log, 'INPUT_ALERT_CHANGED', level='WARNING' if snapshot['input_alert']!='NORMAL' else 'INFO',
++                  previous_alert=self.last_input_alert, input_alert=snapshot['input_alert'], **fields)
++            self.last_input_alert = snapshot['input_alert']
+ 
+     def snapshot(self):
+         with self.connect() as db:
+@@ -99,7 +116,9 @@
+         else:
+             health = 'HEALTHY'
+         current = row['accepted_value'] if row and not stale and row['status']=='ACCEPTED' else None
+-        return dict(health=health, alert=state['alert'], data_status='STALE' if stale else row['status'] if row else 'WAITING',
++        return dict(health=health, alert=state['alert'],
++                    input_alert='STALE_DATA' if stale else 'NO_VALID_INPUT' if valid_age > 3*self.interval else 'NORMAL',
++                    valid_age_seconds=round(valid_age,2), data_status='STALE' if stale else row['status'] if row else 'WAITING',
+                     current=current, latest=dict(row) if row else None, age_seconds=round(age,2), recent=recent,
+                     interval=self.interval, mode='SYNTHETIC TEST' if self.demo else 'MODULE 6 ACCELERATED REPLAY')
+ 
+@@ -108,7 +127,7 @@
+             try:
+                 self.tick()
+             except Exception as exc:
+-                event(self.log, 'APPLICATION_ERROR', level='ERROR', error=repr(exc))
++                event(self.log, 'APPLICATION_ERROR', level='ERROR', component='Worker', exception_type=type(exc).__name__, database_path=str(self.path), error=repr(exc))
+                 os._exit(1)  # supervisor restarts the entire failed worker/server unit
+             time.sleep(self.interval)
+ 
+--- baseline/logging_config.py
++++ updated/logging_config.py
+@@ -15,4 +15,4 @@
+     return logger
+ 
+ def event(logger, name, level='INFO', **fields):
+-    logger.log(getattr(logging, level), json.dumps(dict(timestamp=datetime.now(timezone.utc).isoformat(), event=name, **fields)))
++    logger.log(getattr(logging, level), json.dumps(dict(timestamp=datetime.now(timezone.utc).isoformat(), event=name, severity=level, **fields)))

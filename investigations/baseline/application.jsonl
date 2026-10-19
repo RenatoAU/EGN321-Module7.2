@@ -1,0 +1,12 @@
+{"timestamp": "2026-10-19T03:11:55.854590+00:00", "event": "STARTUP", "pid": 5, "mode": "synthetic_test"}
+{"timestamp": "2026-10-19T03:11:55.854809+00:00", "event": "RECOVERY_READY", "archive_rows": 8780}
+{"timestamp": "2026-10-19T03:11:55.860350+00:00", "event": "READING_PROCESSED", "status": "ACCEPTED", "source_timestamp": "2026-10-01T08:00:00", "value": 21.88}
+{"timestamp": "2026-10-19T03:11:55.860812+00:00", "event": "HEALTH_CHANGED", "health": "HEALTHY"}
+{"timestamp": "2026-10-19T03:11:56.365078+00:00", "event": "READING_PROCESSED", "status": "ACCEPTED", "source_timestamp": "2026-10-01T08:01:00", "value": 21.99}
+{"timestamp": "2026-10-19T03:11:56.868133+00:00", "event": "READING_PROCESSED", "status": "ACCEPTED", "source_timestamp": "2026-10-01T08:02:00", "value": 22.14}
+{"timestamp": "2026-10-19T03:11:58.370535+00:00", "event": "HEALTH_CHANGED", "health": "DEGRADED"}
+{"timestamp": "2026-10-19T03:11:58.370687+00:00", "event": "MISSING_OR_STALE_DATA", "health": "DEGRADED"}
+{"timestamp": "2026-10-19T03:12:01.875500+00:00", "event": "HEALTH_CHANGED", "health": "FAILED"}
+{"timestamp": "2026-10-19T03:12:01.875647+00:00", "event": "MISSING_OR_STALE_DATA", "health": "FAILED"}
+{"timestamp": "2026-10-19T03:12:02.378007+00:00", "event": "READING_PROCESSED", "status": "ACCEPTED", "source_timestamp": "2026-10-01T08:03:00", "value": 22.09}
+{"timestamp": "2026-10-19T03:12:02.378616+00:00", "event": "HEALTH_CHANGED", "health": "HEALTHY"}

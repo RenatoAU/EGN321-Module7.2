@@ -1,0 +1,65 @@
+{
+  "captured_utc": "2026-10-19T03:12:02.400870+00:00",
+  "api_http": 200,
+  "dashboard_http": 200,
+  "database_integrity": "ok",
+  "replay_rows": 4,
+  "archive_rows": 8780,
+  "replay_prefix_sha256": "9265496d4538c7ae0782610b0d65b85804cafe0b07d4294af3767e00921bbaa1",
+  "state": {
+    "age_seconds": 0.0,
+    "alert": "NORMAL",
+    "current": 22.09,
+    "data_status": "ACCEPTED",
+    "health": "HEALTHY",
+    "interval": 0.5,
+    "latest": {
+      "accepted_value": 22.09,
+      "id": 4,
+      "provenance": "SYNTHETIC_TEST",
+      "raw_value": "22.09",
+      "received_utc": "2026-10-19T03:12:02.376233+00:00",
+      "source_timestamp": "2026-10-01T08:03:00",
+      "status": "ACCEPTED"
+    },
+    "mode": "SYNTHETIC TEST",
+    "recent": [
+      {
+        "accepted_value": 22.09,
+        "id": 4,
+        "provenance": "SYNTHETIC_TEST",
+        "raw_value": "22.09",
+        "received_utc": "2026-10-19T03:12:02.376233+00:00",
+        "source_timestamp": "2026-10-01T08:03:00",
+        "status": "ACCEPTED"
+      },
+      {
+        "accepted_value": 22.14,
+        "id": 3,
+        "provenance": "SYNTHETIC_TEST",
+        "raw_value": "22.14",
+        "received_utc": "2026-10-19T03:11:56.866063+00:00",
+        "source_timestamp": "2026-10-01T08:02:00",
+        "status": "ACCEPTED"
+      },
+      {
+        "accepted_value": 21.99,
+        "id": 2,
+        "provenance": "SYNTHETIC_TEST",
+        "raw_value": "21.99",
+        "received_utc": "2026-10-19T03:11:56.361499+00:00",
+        "source_timestamp": "2026-10-01T08:01:00",
+        "status": "ACCEPTED"
+      },
+      {
+        "accepted_value": 21.88,
+        "id": 1,
+        "provenance": "SYNTHETIC_TEST",
+        "raw_value": "21.88",
+        "received_utc": "2026-10-19T03:11:55.858507+00:00",
+        "source_timestamp": "2026-10-01T08:00:00",
+        "status": "ACCEPTED"
+      }
+    ]
+  }
+}

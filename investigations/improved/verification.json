@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "pid": 6,
+  "source_sha256": "c6610cf3816d78ad0553c0d5e404753149967d299312331e66635db6fb7e9cf5",
+  "prefix_preserved": true,
+  "archive_rows": 8780,
+  "normal_rows": 3,
+  "failed_rows": 3,
+  "recovered_rows": 4,
+  "platform": "linux",
+  "environment": "Assistant execution environment; original CSV values; accelerated classroom replay"
+}
